@@ -43,7 +43,6 @@ const ProductForm = ({product}: ProductFormProps): JSX.Element => {
 
 	const setOption = (name: string, value: string) => {
 		setSelectedOptions(prevState => {
-			console.log(name, value)
 			return {...prevState, [name]: value}
 		})
 	}
