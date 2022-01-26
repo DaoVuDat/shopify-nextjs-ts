@@ -1,4 +1,5 @@
-import {Product, ProductConnection} from "shopify-storefront-api-typings";
+import {Checkout, Product, ProductConnection} from "shopify-storefront-api-typings";
+import {SelectedVariant} from "../components/ProductForm";
 
 const domain = process.env.SHOPIFY_STORE_DOMAIN!;
 const storefrontAccessToken = process.env.SHOPIFY_STOREFRONT_ACCESSTOKEN!;
@@ -134,4 +135,62 @@ export async function getProduct(handle: string) {
 	const product: Product = await response.data.product;
 
 	return product ?? {};
+}
+
+export async function createCheckout(id: string, quantity: number) {
+	const query = `
+		mutation {
+			checkoutCreate(input:{
+				lineItems: [
+					{variantId: "${id}", quantity: ${quantity}}
+				]
+			}) {
+				checkout {
+					id,
+					webUrl,
+					
+				}
+			}
+		}
+	`;
+
+	const response = await shopifyData(query);
+
+	const checkout: Checkout = await response.data.checkoutCreate.checkout;
+
+	return checkout ?? {};
+}
+
+export async function updateCheckout(id: string, lineItems: SelectedVariant[]) {
+	const lineItemObject = lineItems.map(item => {
+		return `{
+			variantId: "${item.id}",
+			quantity: ${item.variantQuantity}
+		}`
+	})
+
+	const query = `
+	mutation {
+		checkoutLineItemsReplace(lineItems: [${lineItemObject}], checkoutId: "${id}") {
+			checkout {
+				id
+				webUrl
+				lineItems(first: 25) {
+					edges {
+						node {
+							id
+							title
+							quantity
+						}
+					}
+				}
+			}
+		}
+	}
+	`
+
+	const response = await shopifyData(query);
+	const checkout: Checkout = await response.data.checkoutLineItemsReplace.checkout;
+
+	return checkout ?? {};
 }
