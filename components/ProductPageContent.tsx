@@ -35,7 +35,8 @@ const ProductPageContent = ({product}: ProductPageContentProp): JSX.Element => {
 				{/*	src={product.images.edges[0].node.url}*/}
 				{/*	alt={product.images.edges[0].node.altText}/>*/}
 				<Swiper
-					style={{"--swiper-navigation-color": '#000', "--swiper-pagination-color": '#000'}}
+				// @ts-ignore
+				style={{"--swiper-navigation-color": '#000', "--swiper-pagination-color": '#000'}}
 					navigation
 					loop
 					className="h-96 rounded-2xl"
