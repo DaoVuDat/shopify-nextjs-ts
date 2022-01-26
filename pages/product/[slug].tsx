@@ -10,7 +10,7 @@ interface ProductPageProp {
 const ProductPage = ({product}: ProductPageProp): JSX.Element => {
 
 	return (
-	<div>
+	<div className="max-h-screen py-12 sm:pt-20">
 		<ProductPageContent product={product}/>
 	</div>
 	);
